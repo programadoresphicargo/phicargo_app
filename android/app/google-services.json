@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "657940269926",
+    "project_id": "phicargo",
+    "storage_bucket": "phicargo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657940269926:android:054bb488fb315801f956a7",
+        "android_client_info": {
+          "package_name": "com.tb.phicargo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657940269926-q1u8hja5j5gbrdhf8doo828rjvo16q2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTdvQoZkYSucEvfKDiQa3KlBRYd3HEwnU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657940269926-q1u8hja5j5gbrdhf8doo828rjvo16q2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
