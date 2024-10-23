@@ -133,6 +133,7 @@ class _LoginPageState extends State<LoginPage> {
         'passwoord': pass,
         'identifier': widget.identifier,
       }).timeout(const Duration(seconds: 10));
+      print('---->');
       print(response.body);
       if (response.body == "0") {
         Navigator.of(context).pop();
@@ -186,6 +187,8 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.of(context).pop();
     } on SocketException catch (e) {
       Navigator.of(context).pop();
+      print(e);
+
       error_alert(
           'Sin internet',
           'Revise su conexión a internet e intentelo de nuevo.',
