@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:location/location.dart' as loc;
 import 'package:lottie/lottie.dart';
-import 'package:phicargo/Estatus/Pantalla_principal/MiViaje.dart';
-import 'package:phicargo/Estatus/Seleccion_estatus/formulario_envio.dart';
+import 'package:phicargo/Viajes/Pantalla_principal/MiViaje.dart';
+import 'package:phicargo/Viajes/Seleccion_estatus/formulario_envio.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,7 +36,7 @@ class _StatusState extends State<Status> {
   late Future<void> fetchDataFuture;
 
   Future<void> fetchData() async {
-    String url = '${conexion}phicargo/aplicacion/estatus/obtener_status.php';
+    String url = '${conexion}phicargo/aplicacion/viajes/obtener_estatus.php';
     try {
       http.Response response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -44,11 +44,11 @@ class _StatusState extends State<Status> {
         var data = jsonDecode(response.body);
         print('Datos obtenidos: $data');
         for (var item in data) {
-          String id_status = item['id_status'].toString();
-          String status_nombre = item['status'].toString();
+          String id_estatus = item['id_estatus'].toString();
+          String nombre_estatus = item['nombre_estatus'].toString();
           String imagen = item['imagen'].toString();
 
-          Listado.add(StatusItem(id_status, status_nombre, imagen));
+          Listado.add(StatusItem(id_estatus, nombre_estatus, imagen));
         }
       } else {
         print('Error->: ${response.statusCode}');
@@ -178,8 +178,8 @@ class _StatusState extends State<Status> {
   }
 
   int selectedService = -1;
-  String id_status = '';
-  String status_nombre = '';
+  String id_estatus = '';
+  String nombre_estatus = '';
   String referencia = '';
   String img = '';
   double latitud = 0.0;
@@ -223,8 +223,8 @@ class _StatusState extends State<Status> {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => MyScreenMapa(
-                      id_status: id_status,
-                      status_nombre: status_nombre,
+                      id_estatus: id_estatus,
+                      nombre_estatus: nombre_estatus,
                       url_imagen:
                           'https://phicargo-sistemas.online/phicargo/img/status/$img',
                       latitud: latitud,
@@ -312,8 +312,8 @@ class _StatusState extends State<Status> {
                         setState(() {
                           selectedService =
                               selectedService == index ? -1 : index;
-                          id_status = Listado[index].id_status;
-                          status_nombre = Listado[index].status_nombre;
+                          id_estatus = Listado[index].id_status;
+                          nombre_estatus = Listado[index].status_nombre;
                           img = Listado[index].icono;
                         });
                       },

@@ -111,8 +111,7 @@ class _MyAppState extends State<MyAppScan> {
 
     try {
       final response = await http.post(
-        Uri.parse(
-            '${conexion}phicargo/aplicacion/estatus/estatus_enviados.php'),
+        Uri.parse('${conexion}phicargo/aplicacion/viajes/estatus_enviados.php'),
         body: {
           'id_viaje': widget.id_viaje.toString(),
           'id_operador': id_operador.toString(),
@@ -307,7 +306,7 @@ class _MyAppState extends State<MyAppScan> {
                                         ),
                                       ),
                                       title: Text(
-                                        item['status'],
+                                        item['nombre_estatus'],
                                         style: const TextStyle(
                                           fontFamily: 'Product Sans',
                                           fontSize: 20,
@@ -463,8 +462,7 @@ class _MyAppState extends State<MyAppScan> {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse(
-            '${conexion}phicargo/aplicacion/estatus/enviar_evidencia.php'),
+        Uri.parse('${conexion}phicargo/aplicacion/viajes/enviar_evidencia.php'),
       );
 
       request.fields['id_viaje'] = widget.id_viaje;

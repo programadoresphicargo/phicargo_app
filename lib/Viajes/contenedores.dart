@@ -24,7 +24,7 @@ class _ContenedorState extends State<Contenedor> {
   Future<void> getUserApi(nombre) async {
     try {
       var response = await http.post(
-          Uri.parse('${conexion}phicargo/aplicacion/estatus/obtener_cp.php'),
+          Uri.parse('${conexion}phicargo/aplicacion/viajes/obtener_cp.php'),
           body: {
             'name': nombre,
           }).timeout(const Duration(seconds: 90));

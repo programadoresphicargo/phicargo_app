@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:lottie/lottie.dart';
-import 'package:phicargo/Estatus/convertir_tiempos.dart';
+import 'package:phicargo/Viajes/convertir_tiempos.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:phicargo/Conexion/Conexion.dart';
@@ -31,7 +31,7 @@ class _DashboardPageState extends State<DashboardPage> {
     try {
       final response = await http.post(
           Uri.parse(
-              '${conexion}phicargo/aplicacion/estatus/obtener_cp_info.php'),
+              '${conexion}phicargo/aplicacion/viajes/obtener_cp_info.php'),
           body: {
             'id_viaje': widget.id_viaje.toString(),
           }).timeout(const Duration(seconds: 90));

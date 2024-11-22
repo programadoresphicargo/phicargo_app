@@ -13,76 +13,24 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'dart:io';
 import '../../Conexion/Conexion.dart';
 
-class StatusPageTimeline extends StatefulWidget {
-  String id_viaje;
+class EstatusOperadorManiobra extends StatefulWidget {
+  String id_maniobra;
 
-  StatusPageTimeline({required this.id_viaje, super.key});
-  State<StatusPageTimeline> createState() => _StatusPageTimelineState();
+  EstatusOperadorManiobra({required this.id_maniobra, super.key});
+  State<EstatusOperadorManiobra> createState() => _EstatusOperadorState();
 }
 
-class _StatusPageTimelineState extends State<StatusPageTimeline> {
-  double porcentaje = 0;
-
-  Future<void> getPorcentaje() async {
+class _EstatusOperadorState extends State<EstatusOperadorManiobra> {
+  Future<List<dynamic>> getEstatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? id_operador = prefs.getString('id');
 
     try {
       final response = await http.post(
         Uri.parse(
-            '${conexion}phicargo/aplicacion/estatus/porcentaje_cumplimiento.php'),
+            '${conexion}phicargo/aplicacion/maniobras/estatus_enviados.php'),
         body: {
-          'id_viaje': widget.id_viaje.toString(),
-          'id_operador': id_operador.toString(),
-        },
-      ).timeout(const Duration(seconds: 90));
-
-      if (response.statusCode == 200) {
-        print(response.body);
-        List<dynamic> data = jsonDecode(response.body);
-
-        if (data.isNotEmpty) {
-          var statusCount = data[0]['status_count'];
-          var porcentajeCumplimiento = data[0]['porcentaje_cumplimiento'];
-
-          int statusCountInt = int.parse(statusCount);
-          double porcentajeCumplimientoDouble =
-              double.parse(porcentajeCumplimiento);
-
-          print('Status Count: $statusCountInt');
-          print('Porcentaje de Cumplimiento: $porcentajeCumplimientoDouble');
-
-          setState(() {
-            porcentaje = porcentajeCumplimientoDouble;
-            if (porcentajeCumplimientoDouble == 100.00) {
-              _controllerCenter.play();
-              showNotificacion('Nivel de cumplimiento alcanzado',
-                  'Completaste el envio de estatus de este viaje correctamente');
-            }
-          });
-        } else {
-          throw Exception('No data found');
-        }
-      }
-    } on TimeoutException catch (e) {
-      throw Exception('Request timed out');
-    } on SocketException catch (e) {
-      throw Exception('No Internet connection');
-    } on FormatException catch (e) {
-      throw Exception('Invalid format');
-    }
-  }
-
-  Future<List<dynamic>> getStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? id_operador = prefs.getString('id');
-
-    try {
-      final response = await http.post(
-        Uri.parse(
-            '${conexion}phicargo/aplicacion/estatus/estatus_enviados.php'),
-        body: {
-          'id_viaje': widget.id_viaje.toString(),
+          'id_maniobra': widget.id_maniobra.toString(),
           'id_operador': id_operador.toString(),
         },
       ).timeout(const Duration(seconds: 90));
@@ -105,8 +53,7 @@ class _StatusPageTimelineState extends State<StatusPageTimeline> {
 
   Future refresh() async {
     setState(() {
-      getStatus();
-      getPorcentaje();
+      getEstatus();
     });
   }
 
@@ -127,7 +74,6 @@ class _StatusPageTimelineState extends State<StatusPageTimeline> {
 
   void initState() {
     super.initState();
-    getPorcentaje();
     _controllerCenter =
         ConfettiController(duration: const Duration(seconds: 10));
   }
@@ -172,42 +118,10 @@ class _StatusPageTimelineState extends State<StatusPageTimeline> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
-                    color: const Color.fromARGB(255, 28, 42, 165),
-                    width: double.infinity,
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        SleekCircularSlider(
-                          appearance: CircularSliderAppearance(
-                              infoProperties: InfoProperties(
-                                mainLabelStyle: const TextStyle(
-                                    fontFamily: 'Product Sans',
-                                    color: Colors.white,
-                                    fontSize: 30),
-                              ),
-                              customColors:
-                                  CustomSliderColors(hideShadow: true),
-                              customWidths:
-                                  CustomSliderWidths(progressBarWidth: 10)),
-                          min: 0,
-                          max: 100,
-                          initialValue: porcentaje,
-                        ),
-                        const Text(
-                          'Porcentaje de cumplimiento',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: 'Product Sans'),
-                        ),
-                      ],
-                    ),
-                  ),
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: FutureBuilder<List<dynamic>>(
-                      future: getStatus(),
+                      future: getEstatus(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -231,7 +145,7 @@ class _StatusPageTimelineState extends State<StatusPageTimeline> {
                               var item = snapshot.data![index];
                               String imageUrl =
                                   '${conexion}phicargo/img/status/' +
-                                      item['imagen'];
+                                      item['imagen'].toString();
 
                               return FutureBuilder<Color>(
                                 future: _updatePalette(imageUrl),
@@ -255,7 +169,6 @@ class _StatusPageTimelineState extends State<StatusPageTimeline> {
                                           backgroundColor:
                                               cardColor.withOpacity(0.5),
                                           child: Image.network(
-                                            // ignore: prefer_interpolation_to_compose_strings
                                             '${conexion}phicargo/img/status/' +
                                                 item['imagen'],
                                           ),
@@ -266,7 +179,7 @@ class _StatusPageTimelineState extends State<StatusPageTimeline> {
                                               fontFamily: 'Product Sans',
                                               fontSize: 20),
                                         ),
-                                        subtitle: Text(item['fecha_envio']),
+                                        subtitle: Text(item['fecha_hora']),
                                       ),
                                     ),
                                   );

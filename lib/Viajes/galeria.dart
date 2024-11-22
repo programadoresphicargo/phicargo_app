@@ -35,7 +35,7 @@ class _GaleriaState extends State<Galeria> {
   Future<void> getStatus(referencia) async {
     try {
       final response = await http.post(
-          Uri.parse('${conexion}phicargo/aplicacion/estatus/obtener-img.php'),
+          Uri.parse('${conexion}phicargo/aplicacion/viajes/obtener-img.php'),
           body: {
             'referencia': referencia.toString(),
           }).timeout(const Duration(seconds: 90));

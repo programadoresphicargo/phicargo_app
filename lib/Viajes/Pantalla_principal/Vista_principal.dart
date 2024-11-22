@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:http/http.dart' as http;
 import 'package:phicargo/Alertas/alerta.dart';
-import 'package:phicargo/Estatus/Enviados/estatus_enviados.dart';
-import 'package:phicargo/estatus/contenedores.dart';
+import 'package:phicargo/Viajes/Enviados/estatus_enviados.dart';
+import 'package:phicargo/viajes/contenedores.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:phicargo/Conexion/Conexion.dart';
 
 import '../Envio_evidencias/evidencia.dart';
-import '../Seleccion_estatus/seleccion_status.dart';
+import '../Seleccion_estatus/seleccion_estatus.dart';
 
 class StatusPrincipal extends StatefulWidget {
   String id_viaje;
@@ -29,7 +29,7 @@ class _StatusPrincipalState extends State<StatusPrincipal> {
   Future<void> getViaje() async {
     try {
       final response = await http.post(
-          Uri.parse('${conexion}phicargo/aplicacion/estatus/obtener_viaje.php'),
+          Uri.parse('${conexion}phicargo/aplicacion/viajes/obtener_viaje.php'),
           body: {
             'id_viaje': widget.id_viaje.toString(),
           }).timeout(const Duration(seconds: 90));

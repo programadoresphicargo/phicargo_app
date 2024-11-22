@@ -10,11 +10,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart' as loc;
 import 'package:phicargo/Alertas/alerta.dart';
 import 'package:phicargo/Login/Welcome.dart';
-import 'package:phicargo/Estatus/Enviados/estatus_enviados.dart';
-import 'package:phicargo/Estatus/vista_previa.dart';
+import 'package:phicargo/Maniobras/Enviados/estatus_enviados.dart';
+import 'package:phicargo/Viajes/Enviados/estatus_enviados.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -24,12 +23,11 @@ import 'package:palette_generator/palette_generator.dart';
 import '../../Conexion/Conexion.dart';
 import '../../notificaciones/services.dart';
 
-// ignore: must_be_immutable
-class MyScreenMapa extends StatefulWidget {
+class envio_estatus_form_maniobra extends StatefulWidget {
   String id_status;
   String status_nombre;
   String url_imagen;
-  String id_viaje;
+  String id_maniobra;
   String id_vehiculo;
   String referencia;
   double latitud;
@@ -39,8 +37,8 @@ class MyScreenMapa extends StatefulWidget {
   String sublocalidad;
   String codigo_postal;
 
-  MyScreenMapa(
-      {required this.id_viaje,
+  envio_estatus_form_maniobra(
+      {required this.id_maniobra,
       required this.referencia,
       required this.id_status,
       required this.status_nombre,
@@ -54,10 +52,10 @@ class MyScreenMapa extends StatefulWidget {
       required this.codigo_postal,
       super.key});
   @override
-  State<MyScreenMapa> createState() => _MyScreenMapaState();
+  State<envio_estatus_form_maniobra> createState() => _MyScreenMapaState();
 }
 
-class _MyScreenMapaState extends State<MyScreenMapa> {
+class _MyScreenMapaState extends State<envio_estatus_form_maniobra> {
   final comentarios = TextEditingController();
 
   Color backgroundColor = Colors.grey;
@@ -114,29 +112,25 @@ class _MyScreenMapaState extends State<MyScreenMapa> {
         },
       );
 
-      // Obtener el ID del operador de SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? id_operador = prefs.getString('id');
 
-      // Crear una solicitud multipart/form-data
       var request = http.MultipartRequest(
           'POST',
           Uri.parse(
-              '${conexion}phicargo/aplicacion/estatus/insertar_estatus.php'));
+              '${conexion}phicargo/aplicacion/maniobras/insertar_estatus.php'));
 
-      // Adjuntar imágenes al formulario
       for (int i = 0; i < images.length; i++) {
         request.files.add(http.MultipartFile('image_$i',
             images[i].readAsBytes().asStream(), images[i].lengthSync(),
             filename: 'image_$i.jpg'));
       }
 
-      // Adjuntar otras variables al formulario
       request.fields.addAll({
-        'id_viaje': widget.id_viaje.toString(),
+        'id_maniobra': widget.id_maniobra.toString(),
         'referencia': widget.referencia.toString(),
-        'id_status': widget.id_status.toString(),
-        'status_nombre': widget.status_nombre.toString(),
+        'id_estatus': widget.id_status.toString(),
+        'estatus_nombre': widget.status_nombre.toString(),
         'comentarios': comentarios.text.toString(),
         'latitud': widget.latitud.toString(),
         'longitud': widget.longitud.toString(),
@@ -148,28 +142,25 @@ class _MyScreenMapaState extends State<MyScreenMapa> {
         'id_vehiculo': widget.id_vehiculo.toString(),
       });
 
-      // Enviar la solicitud con un tiempo de espera
       var streamedResponse =
           await request.send().timeout(const Duration(seconds: 90));
 
-      // Obtener la respuesta
       var response = await http.Response.fromStream(streamedResponse);
       print(response.body);
 
-      // Procesar la respuesta
       if (response.body == '1') {
         showNotificacion('¡estatus enviado con éxito!', '');
         Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(
               builder: (BuildContext context) =>
-                  StatusPageTimeline(id_viaje: widget.id_viaje.toString())),
+                  EstatusOperadorManiobra(id_maniobra: widget.id_maniobra)),
           (route) => false,
         );
       } else {
-        Navigator.pop(context); // Cerrar el diálogo de carga
+        Navigator.pop(context);
         error_alert(
-          'Error: No se pudo enviar el estatus',
+          'Error: No se logro el envio',
           response.body,
           const Icon(
             Icons.info_sharp,

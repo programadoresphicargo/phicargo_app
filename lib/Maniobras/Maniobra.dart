@@ -2,15 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:lottie/lottie.dart';
 import 'package:http/http.dart' as http;
-import 'package:phicargo/Maniobras/enviados.dart';
-import 'package:phicargo/Maniobras/formulario_step1.dart';
+import 'package:phicargo/Maniobras/Enviados/estatus_enviados.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:phicargo/Conexion/Conexion.dart';
-import '../Estatus/convertir_tiempos.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+
+import 'Seleccion_estatus/seleccion_estatus.dart';
 
 class Maniobras extends StatefulWidget {
   @override
@@ -197,6 +196,7 @@ class _ManiobrasState extends State<Maniobras> {
                       dolly: data[index]['dolly_name'].toString(),
                       estado_maniobra:
                           data[index]['estado_maniobra'].toString(),
+                      contenedores: data[index]['contenedores_ids'].toString(),
                     );
                   },
                 );
@@ -256,6 +256,7 @@ class Maniobra_info extends StatelessWidget {
   String remolque2;
   String dolly;
   String estado_maniobra;
+  String contenedores;
 
   Maniobra_info({
     Key? key,
@@ -268,6 +269,7 @@ class Maniobra_info extends StatelessWidget {
     required this.remolque2,
     required this.dolly,
     required this.estado_maniobra,
+    required this.contenedores,
   }) : super(key: key);
 
   @override
@@ -327,6 +329,36 @@ class Maniobra_info extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
+          const Text(('Contenedores'),
+              style: TextStyle(
+                fontFamily: 'Product Sans',
+                color: Colors.grey,
+                fontSize: 14,
+              )),
+          const SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Badge(
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              backgroundColor: Colors.green,
+              largeSize: 20,
+              textStyle: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Product Sans'),
+              textColor: Colors.white,
+              label: Text(
+                contenedores,
+                style: TextStyle(fontSize: 18),
+              ),
+              isLabelVisible: true,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: const Badge(
@@ -374,30 +406,32 @@ class Maniobra_info extends StatelessWidget {
                       icono: 'assets/usuario.png'),
                 ),
               ),
-              ResponsiveGridCol(
-                xs: 6,
-                md: 3,
-                child: Container(
-                  height: 100,
-                  alignment: Alignment(0, 0),
-                  child: equipo(
-                      titulo: 'Remolque 2',
-                      nombre: remolque2,
-                      icono: 'assets/usuario.png'),
+              if (remolque2 != 'null')
+                ResponsiveGridCol(
+                  xs: 6,
+                  md: 3,
+                  child: Container(
+                    height: 100,
+                    alignment: Alignment(0, 0),
+                    child: equipo(
+                        titulo: 'Remolque 2',
+                        nombre: remolque2,
+                        icono: 'assets/usuario.png'),
+                  ),
                 ),
-              ),
-              ResponsiveGridCol(
-                xs: 6,
-                md: 3,
-                child: Container(
-                  height: 100,
-                  alignment: Alignment(0, 0),
-                  child: equipo(
-                      titulo: 'Dolly',
-                      nombre: dolly,
-                      icono: 'assets/usuario.png'),
+              if (dolly != 'null')
+                ResponsiveGridCol(
+                  xs: 6,
+                  md: 3,
+                  child: Container(
+                    height: 100,
+                    alignment: Alignment(0, 0),
+                    child: equipo(
+                        titulo: 'Dolly',
+                        nombre: dolly,
+                        icono: 'assets/usuario.png'),
+                  ),
                 ),
-              ),
             ],
           ),
           SizedBox(
@@ -414,12 +448,11 @@ class Maniobra_info extends StatelessWidget {
                   ? () {
                       Navigator.of(context).push(
                         CupertinoPageRoute(
-                          builder: (context) => EnviarStatusManiobras(
-                              id_cp: id_maniobra,
-                              referencia: 'referencia',
-                              contenedor: 'contenedores',
-                              tipo: '',
-                              tipoterminal: 'tipoterminal,'),
+                          builder: (context) => seleccion_estatus_maniobra(
+                            id_maniobra: id_maniobra,
+                            referencia: 'referencia',
+                            id_vehiculo: vehiculo,
+                          ),
                         ),
                       );
                     }
@@ -481,10 +514,8 @@ class Maniobra_info extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (context) => Status_Enviados_Maniobras(
-                      referencia: ' referencia',
-                      id_cp: id_maniobra,
-                      tipo: ' tipo',
+                    builder: (context) => EstatusOperadorManiobra(
+                      id_maniobra: id_maniobra,
                     ),
                   ),
                 );

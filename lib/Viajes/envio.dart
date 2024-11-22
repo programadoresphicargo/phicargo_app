@@ -51,7 +51,7 @@ class _EnvioState extends State<Envio> {
 
     try {
       var response = await http.post(
-          Uri.parse('${conexion}phicargo/aplicacion/estatus/enviar_img.php'),
+          Uri.parse('${conexion}phicargo/aplicacion/viajes/enviar_img.php'),
           body: {
             'id': widget.id.toString(),
             'name': widget.name.toString(),

@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:http/http.dart' as http;
-import 'package:phicargo/estatus/contenedores.dart';
-import 'package:phicargo/estatus/convertir_tiempos.dart';
+import 'package:phicargo/viajes/contenedores.dart';
+import 'package:phicargo/viajes/convertir_tiempos.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:phicargo/Conexion/Conexion.dart';
 

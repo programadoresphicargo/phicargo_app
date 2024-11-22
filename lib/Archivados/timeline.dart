@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:http/http.dart' as http;
 import 'package:phicargo/Metodos/diferencia_tiempo.dart';
-import 'package:phicargo/Estatus/maps.dart';
-import 'package:phicargo/estatus/convertir_tiempos.dart';
-import 'package:phicargo/estatus/vista.dart';
+import 'package:phicargo/Viajes/maps.dart';
+import 'package:phicargo/viajes/convertir_tiempos.dart';
+import 'package:phicargo/viajes/vista.dart';
 import 'package:phicargo/Conexion/Conexion.dart';
 import 'package:url_launcher/url_launcher.dart';
 

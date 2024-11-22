@@ -1,17 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phicargo/Comunicados/index.dart';
 import 'package:phicargo/Bonos/index.dart';
 import 'package:phicargo/Contactos/index.dart';
 import 'package:phicargo/Reportes_fallas/menu_principal.dart';
-import 'package:phicargo/Estatus/Pantalla_principal/MiViaje.dart';
+import 'package:phicargo/Viajes/Pantalla_principal/MiViaje.dart';
 import 'package:phicargo/drawer.dart';
 import 'package:phicargo/Turnos/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'Conexion/Conexion.dart';
-import 'Maniobras/maniobra_info.dart';
+import 'Maniobras/Maniobra.dart';
 
 class Nav extends StatefulWidget {
   int selectedIndex = 0;
@@ -178,9 +179,14 @@ class _NavState extends State<Nav> {
           label: "Bonos",
           icon: Icon(Icons.attach_money_sharp),
         ),
-      const BottomNavigationBarItem(
+      BottomNavigationBarItem(
         label: "Maniobras",
-        icon: Icon(Icons.anchor_sharp),
+        icon: SvgPicture.asset(
+          'assets/contenedor.svg', // Update the path to your SVG file
+          color: Colors.grey[600],
+          width: 25, // Adjust width if needed
+          height: 25, // Adjust height if needed
+        ),
       ),
       const BottomNavigationBarItem(
         label: "Viaje",

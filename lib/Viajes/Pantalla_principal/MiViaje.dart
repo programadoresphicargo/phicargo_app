@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:phicargo/Estatus/Pantalla_principal/Vista_principal.dart';
-import 'package:phicargo/Estatus/Pantalla_principal/MasInformacion.dart';
+import 'package:phicargo/Viajes/Pantalla_principal/Vista_principal.dart';
+import 'package:phicargo/Viajes/Pantalla_principal/MasInformacion.dart';
 import 'package:phicargo/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,7 +30,7 @@ class _MiViajeState extends State<MiViaje> {
       }
 
       var response = await http.post(
-        Uri.parse('${conexion}phicargo/aplicacion/estatus/viaje_asignado.php'),
+        Uri.parse('${conexion}phicargo/aplicacion/viajes/viaje_asignado.php'),
         body: {
           'id': val,
         },
